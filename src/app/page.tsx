@@ -1,6 +1,7 @@
 import NavBar from '@/components/Navbar/NavBar';
 import MobileList from '@/components/Navbar/MobileList';
 import Main from '@/components/Hero/Main';
+import Footer from '@/components/Footer/Footer';
 
 export default function Home() {
   return (
@@ -8,6 +9,7 @@ export default function Home() {
       <NavBar />
       <MobileList />
       <Main />
+      <Footer />
     </div>
   );
 }

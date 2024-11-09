@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: 'a Flare Network Delegation Services',
 };
 
-const isVisible = false;
+const isVisible = true;
 
 export default function RootLayout({
   children,

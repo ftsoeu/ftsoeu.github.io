@@ -76,7 +76,7 @@ export default function NavBar() {
 
   return (
     <>
-      <MainWrapper className='shadow-md bg-white'>
+      <MainWrapper className='shadow-md bg-[#fff]'>
         <></>
         {isMobile ? (
           <>
