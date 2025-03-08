@@ -18,10 +18,7 @@ export default async function ReadLayout({ children }: ReadLayoutProps) {
             {children}
           </article>
           <div className='basis-1/3'>
-            <CallToAction
-              label={hero.callToAction.label}
-              url={hero.callToAction.url}
-            />
+            <CallToAction data={hero.callToAction} />
           </div>
         </div>
       </div>

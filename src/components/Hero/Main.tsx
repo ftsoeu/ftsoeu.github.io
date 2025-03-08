@@ -1,6 +1,6 @@
 import heroData from '@/components/Hero/heroData';
 import CanvasWrapper from '@/components/Hero/CanvasWrapper';
-import CallToAction from '../CallToAction/CallToAction';
+import CallToAction from '@/components/CallToAction/CallToAction';
 import parse from 'html-react-parser';
 import Banner from '../Banner/Banner';
 import bannerData from '../Banner/bannerData';
@@ -37,10 +37,7 @@ export default async function Main(props: { canvas?: boolean }) {
                   </h2>
                 </div>
                 <div className='flex justify-center items-center w-auto grow-0 my-auto basis-2/3 lg:m-auto'>
-                  <CallToAction
-                    label={hero.callToAction?.label}
-                    url={hero.callToAction?.url}
-                  />
+                  <CallToAction data={hero.callToAction} />
                 </div>
               </div>
             </div>

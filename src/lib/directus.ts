@@ -27,11 +27,30 @@ export type Article = {
   status: string;
 };
 
+export type Staking = {
+  url: string;
+  label: string;
+};
+
+export type Delegating = {
+  url: string;
+  label: string;
+};
+
+export type CTAs = {
+  id: string;
+  sort: string | null;
+  label: string;
+  url: string;
+};
+
 export type CallToAction = {
   label: string;
   url: string;
   shortDescription: string;
   description: string;
+  staking: number;
+  delegating: number;
 };
 
 export type Hero = {
@@ -54,6 +73,7 @@ type Schema = {
   global: Global;
   Articles: Article[];
   CallToAction: CallToAction;
+  CTAs: CTAs[];
   Hero: Hero;
   Banner: Banner;
   LandingCards: LandingCard[];
