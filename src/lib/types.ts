@@ -4,6 +4,15 @@ export const navigationLinkValidation = z.object({
   label: z.string().min(1),
   src: z.string().min(1),
   icon: z.string().optional(),
+  children: z
+    .array(
+      z.object({
+        label: z.string().min(1),
+        src: z.string().min(1),
+        icon: z.string().optional(),
+      })
+    )
+    .optional(),
 });
 
 export const navigationBarValidation = z.array(navigationLinkValidation);

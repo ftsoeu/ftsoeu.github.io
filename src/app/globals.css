@@ -74,3 +74,26 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .main-container {
+    height: calc(100vh - 78px);
+  }
+
+  .ftso-text-shadow {
+    text-shadow: '1px 1px 2px black';
+  }
+
+  .ftso-icon-set {
+    height: 25;
+    width: 25;
+  }
+
+  .ftso-logo-line-height {
+    line-height: '1.25';
+  }
+
+  .ftso-mobile-list {
+    top: 78px;
+  }
+}

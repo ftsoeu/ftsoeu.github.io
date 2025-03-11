@@ -20,7 +20,7 @@ export default function CallToAction(props: { data: any }) {
           &
         </div>
         <Link
-          key={props.data.delegating.id}
+          key={props.data.staking.id}
           href={props.data.staking.URL}
           target='_BLANK'
           className='text-white bg-primary w-full font-bold rounded-md p-3'

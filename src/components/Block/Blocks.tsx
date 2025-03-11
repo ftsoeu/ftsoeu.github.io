@@ -10,7 +10,7 @@ export default async function Blocks() {
           {data.map((d) => {
             return (
               <Block
-                key={d.order}
+                key={d.Title}
                 title={d.Title}
                 description={d.Description}
               />
