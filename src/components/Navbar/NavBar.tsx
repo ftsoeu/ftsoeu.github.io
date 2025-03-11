@@ -9,16 +9,72 @@ import MainWrapper from '@/components/MainWrapper';
 import Logo from '@/components/Icons/Logo';
 import ButtonBar from './ButtonBar';
 import { TypeIcons } from '@/lib/icons';
+import useSubStore from './useSubStore';
+
+function SubMenu(props: { id: string; links: any }) {
+  let { subject, isOpen } = useSubStore();
+  let contentToShow = <></>;
+
+  if (props.id == subject) {
+    return (
+      <ul className='w-full bg-white rounded-md'>
+        {props.links.map((i: any) => {
+          return (
+            <li key={i.src}>
+              <ButtonBar src={i.src} label={i.label} />
+            </li>
+          );
+        })}
+      </ul>
+    );
+  } else {
+    return contentToShow;
+  }
+}
 
 function DesktopNav(props: { links: NavLink[] }) {
+  const { isOpen, subject, handleOpen } = useSubStore();
+
+  const onClick = (sub: string) => {
+    if (sub != subject) {
+      handleOpen({ subject: sub, state: !isOpen });
+    } else {
+      handleOpen({ subject: undefined, state: !isOpen });
+    }
+  };
+
   return (
     <>
       <ul className='w-full flex flex-grow justify-end flex-row space-x-6 ml-auto'>
-        {props.links.map((i) => (
-          <li key={i.src}>
-            <ButtonBar src={i.src} label={i.label} icon={i.icon as TypeIcons} />
-          </li>
-        ))}
+        {props.links.map((i) => {
+          let sub = i.children ? (
+            <SubMenu id={i.label} links={i.children} />
+          ) : (
+            <></>
+          );
+          if (i.children) {
+            return (
+              <li key={i.src} onClick={() => onClick(i.label)}>
+                <ButtonBar
+                  src={''}
+                  label={i.label}
+                  icon={i.icon as TypeIcons}
+                />
+                {sub}
+              </li>
+            );
+          } else {
+            return (
+              <li key={i.src}>
+                <ButtonBar
+                  src={i.src}
+                  label={i.label}
+                  icon={i.icon as TypeIcons}
+                />
+              </li>
+            );
+          }
+        })}
       </ul>
     </>
   );
@@ -76,22 +132,28 @@ export default function NavBar() {
 
   return (
     <>
-      <MainWrapper className='shadow-md z-50 bg-[#fff]'>
-        <></>
-        {isMobile ? (
-          <>
-            <MainWrapper isNavbar={true}>
-              <Logo />
-              <MobileNav />
-            </MainWrapper>
-          </>
-        ) : (
+      {isMobile ? (
+        <MainWrapper className='shadow-md z-50 bg-[#fff]'>
           <MainWrapper isNavbar={true}>
             <Logo />
-            <DesktopNav links={links} />
+            <MobileNav />
           </MainWrapper>
-        )}
-      </MainWrapper>
+        </MainWrapper>
+      ) : (
+        <div className='fixed p-0 w-full'>
+          <div className='absolute z-51 w-full bg-white flex items-center justify-center h-16'></div>
+          <div className='absolute z-52 w-full flex flex-row text-primary'>
+            <div className='container m-auto'>
+              <div className='float-left'>
+                <Logo />
+              </div>
+              <div className='float-right pt-[12px]'>
+                <DesktopNav links={links} />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

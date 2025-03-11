@@ -4,7 +4,7 @@ const isDev = process.env.NODE_ENV === 'development';
 const path = require('path');
 const { env } = require('process');
 const lhost =
-  'https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu'; // backend
+  'https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu http://localhost:3000'; // backend
 // Definizione dell'header Content-Security-Policy
 //script-src 'self' 'unsafe-eval' 'unsafe-inline' ${lhost};
 /*const cspHeader = `
@@ -24,13 +24,13 @@ const lhost =
   .trim();*/
 
 const cspHeader = `
-  default-src 'self' https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu;
+  default-src 'self' https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu http://localhost:3000;
   img-src 'self' https://webdata.ftso.eu data: blob: *;  
-  frame-src 'self' https://next.ftso.local https://directus.ftso.local https://next.ftso.local https://webdata.ftso.eu; 
+  frame-src 'self' https://next.ftso.local https://directus.ftso.local https://next.ftso.local https://webdata.ftso.eu http://localhost:3000; 
   child-src 'self' blob:; 
-  frame-ancestors 'self' https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu;
-  script-src 'self' https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu;
-  style-src 'self' https://next.ftso.local 'unsafe-hashes';
+  frame-ancestors 'self' https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu http://localhost:3000;
+  script-src 'self' https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu http://localhost:3000;
+  style-src 'self' https://next.ftso.local http://localhost:3000;
 `
   .replace(/\s{2,}/g, ' ')
   .trim();
@@ -72,6 +72,14 @@ console.log('isDev?', data);
 
 const nextConfig = {
   ...data,
+  reactStrictMode: true,
+  experimental: {
+    optimizeCss: false, // Evita stili inline
+    disableOptimizedLoading: true,
+  },
+  devIndicators: {
+    autoPrerender: false,
+  },
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -176,7 +184,11 @@ const nextConfig = {
       },*/
     ];
   },
-  webpack: (config) => {
+  webpack: (config, { dev }) => {
+    if (dev) {
+      config.optimization.minimize = false; // Evita eval() in Fast Refresh
+      config.devtool = false; // Disabilita source maps (che usano eval())
+    }
     config.resolve.alias['@'] = path.resolve(__dirname, 'src');
     return config;
   },

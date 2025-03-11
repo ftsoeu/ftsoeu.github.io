@@ -6,6 +6,8 @@ import MobileList from '@/components/Navbar/MobileList';
 import Footer from '@/components/Footer/Footer';
 import { headers } from 'next/headers';
 
+import Script from 'next/script';
+
 const inter = Roboto({ weight: '400', subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -17,9 +19,13 @@ const isVisible = false;
 
 export default function RootLayout({
   children,
+  nonce,
 }: {
   children: React.ReactNode;
+  nonce?: string;
 }) {
+  //const nonce = headers().get('X-CSP-Nonce') || '';
+
   return (
     <html lang='en'>
       <head></head>
@@ -31,7 +37,10 @@ export default function RootLayout({
           <Footer />
         </div>
       </body>
-      {isVisible && <script src='https://unpkg.com/spacingjs' defer></script>}
+      <Script nonce={nonce} />
+      {isVisible && (
+        <Script src='https://unpkg.com/spacingjs' nonce={nonce} defer />
+      )}
     </html>
   );
 }

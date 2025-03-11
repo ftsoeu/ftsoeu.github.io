@@ -35,7 +35,7 @@ function Icon() {
           ></path>
           <g
             aria-label='ftso.eu'
-            style={{ lineHeight: '1.25' }}
+            className='ftso-logo-line-height'
             display='inline'
             fontFamily='Ubuntu'
             fontSize='133.333'
@@ -52,7 +52,7 @@ function Icon() {
           </g>
           <g
             aria-label='European Flare Time Series Oracle'
-            style={{ lineHeight: '1.25' }}
+            className='ftso-logo-line-height'
             strokeWidth='0.225'
             display='inline'
             filter='url(#filter882)'
