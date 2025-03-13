@@ -85,8 +85,16 @@
   }
 
   .ftso-icon-set {
-    height: 25;
-    width: 25;
+    height: 16;
+    width: 16;
+    padding: 2px;
+  }
+
+  .ftso-icon-set-mobile {
+    height: 12;
+    width: 12;
+    padding-right: 2px;
+    padding-left: 2px;
   }
 
   .ftso-logo-line-height {
