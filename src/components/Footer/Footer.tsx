@@ -7,7 +7,7 @@ import Social from '@/components/Social/Social';
 
 export default function Footer() {
   const { isMobile } = useNavbarStore();
-
+  const year = new Date().getFullYear();
   return (
     <MainWrapper>
       <MainWrapper isNavbar className='bg-red'>
@@ -15,8 +15,8 @@ export default function Footer() {
           <Link href='/privacy'>privacy</Link>
         </div>
         <div>
-          {isMobile && '© 2024 FTSO.eu'}
-          {!isMobile && '© 2024 FTSO.eu. All rights reserved.'}
+          {isMobile && `© ${year} FTSO.eu`}
+          {!isMobile && `© ${year} FTSO.eu. All rights reserved.`}
         </div>
         <div>
           <Social />
