@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 
 import { draftMode } from 'next/headers';
 import directus from '@/lib/directus';
-import { readItem } from '@directus/sdk';
+import { readItem, readItems } from '@directus/sdk';
 
 export const dynamic = 'force-static';
 
@@ -19,8 +19,14 @@ export const dynamicParams = false;
 export async function generateStaticParams() {
   console.log('generateStaticParams called');
   if (process.env.NODE_ENV === 'development') {
-    console.log('dev here');
-    return [{ id: 'dev' }];
+    const pages = await directus.request(
+      readItems('Articles', {
+        fields: ['*'],
+      })
+    );
+    return pages.map((page) => ({
+      slug: page.id,
+    }));
   }
   // this is working
   return [];
@@ -34,6 +40,7 @@ export default async function Page({ params }: any) {
   }*/
 
   const id = (await params).id;
+  console.log('from page:', id);
 
   /*if (
     (!id || id === 'undefined' || id === '1') &&
