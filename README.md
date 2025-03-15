@@ -3,6 +3,45 @@ This is the new website of [Ftso.eu](https://ftso.eu).
 
 Currently it is in hard development, before to go public. And it will be soon available on **Github Pages** (Here the [link](https://ftsoeu.github.io/)).
 
+## Content Editor's Notes
+
+**Requirements**: Docker.
+
+First of all set **ftso.local** local domain at your local machine following at following path "C:\Windows\System32\drivers\etc\hosts"
+
+```
+127.0.0.1 next.ftso.local
+127.0.0.1 directus.ftso.local
+
+```
+
+Create a .env file with following data, changing **DIRECTUS_URL** and **NEXT_PUBLIC_DIRECTUS_URL**:
+
+```
+NODE_ENV=development
+
+NEXT_PUBLIC_BASE_URL=https://next.ftso.local
+
+DIRECTUS_URL=[real directus deployed url]
+NEXT_PUBLIC_DIRECTUS_URL=[real directus deployed url]
+
+```
+
+and run to build:
+
+```bash
+docker build -t ftso-website .
+
+```
+
+and start to run:
+
+```bash
+docker compose up
+
+```
+
+
 ## Developer's Notes
 
 If you are able to run docker just follow up. Otherwise you need to go at 2 paragraph.
