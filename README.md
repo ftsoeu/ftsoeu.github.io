@@ -5,13 +5,20 @@ Currently it is in hard development, before to go public. And it will be soon av
 
 ## Content Editor's Notes
 
-**Requirements**: Docker.
+**Requirements**: Docker, Git and eventually Vs-Code.
 
 First of all set **ftso.local** local domain at your local machine following at following path "C:\Windows\System32\drivers\etc\hosts"
 
 ```
 127.0.0.1 next.ftso.local
 127.0.0.1 directus.ftso.local
+
+```
+
+Setting the working folder or using Vs-Code to clone the project:
+
+```bash
+git clone https://github.com/ftsoeu/ftsoeu.github.io.git .
 
 ```
 
