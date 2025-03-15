@@ -9,6 +9,7 @@ export function middleware(req: NextRequest) {
   const csp = `
     default-src 'self';
     img-src 'self' 'nonce-${nonce}' https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu;
+    frame-ancestors 'self' https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu http://localhost:3000;
     script-src 'self' 'nonce-${nonce}' https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu https://unpkg.com/spacingjs http://localhost:3000 'unsafe-eval';
     style-src 'self' 'nonce-${nonce}' https://next.ftso.local https://webdata.ftso.eu;
   `.replace(/\n/g, ' ');

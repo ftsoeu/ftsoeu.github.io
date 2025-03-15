@@ -19,17 +19,15 @@ export const dynamicParams = false;
 export async function generateStaticParams() {
   console.log('generateStaticParams called');
   if (process.env.NODE_ENV === 'development') {
-    const pages = await directus.request(
-      readItems('Articles', {
-        fields: ['*'],
-      })
-    );
-    return pages.map((page) => ({
-      slug: page.id,
-    }));
   }
-  // this is working
-  return [];
+  const pages = await directus.request(
+    readItems('Articles', {
+      fields: ['*'],
+    })
+  );
+  return pages.map((page) => ({
+    id: page.id,
+  }));
 }
 
 export default async function Page({ params }: any) {

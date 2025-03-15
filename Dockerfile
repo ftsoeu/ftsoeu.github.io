@@ -1,6 +1,6 @@
 FROM node:lts-alpine3.18 AS base
 
-ENV MODE=prod
+ENV MODE=dev
 
 RUN mkdir -p /ftso/webapp
 

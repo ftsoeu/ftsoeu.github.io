@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 require('dotenv').config();
-const isDev = process.env.NODE_ENV === 'development';
+const isDev = process.env.NODE_ENV === 'development' ? true : false;
 const path = require('path');
 const { env } = require('process');
 const lhost =
