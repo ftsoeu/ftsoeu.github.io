@@ -14,9 +14,9 @@ const navbarData = () => {
         {
           label: 'EVMAllowance',
           src: 'https://evmallowance.com',
-          icon: 'home',
+          icon: 'tools',
         },
-        { label: 'Rewards', src: 'https://rewards.ftso.eu', icon: 'home' },
+        { label: 'Rewards', src: 'https://rewards.ftso.eu', icon: 'tools' },
       ],
     },
     {
@@ -24,10 +24,10 @@ const navbarData = () => {
       src: '/contact-us',
       icon: 'info',
       children: [
-        { label: 'Twitter', src: socialData().twitter, icon: 'home' },
-        { label: 'Telegram', src: socialData().telegram, icon: 'home' },
-        { label: 'YouTube', src: socialData().youtube, icon: 'home' },
-        { label: 'Discord', src: socialData().discord, icon: 'home' },
+        { label: 'Twitter', src: socialData().twitter, icon: 'info' },
+        { label: 'Telegram', src: socialData().telegram, icon: 'info' },
+        { label: 'YouTube', src: socialData().youtube, icon: 'info' },
+        { label: 'Discord', src: socialData().discord, icon: 'info' },
       ],
     },
   ] as NavigationBar;
