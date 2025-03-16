@@ -1,8 +1,14 @@
-import { SocialIcon } from 'react-social-icons';
-import useNavbarStore from '@/components/Navbar/useNavbarStore';
+import { social_icons } from 'react-social-icons';
+import Link from 'next/link';
 
-export default function YoutubeIcon(props: { url: string }) {
-  const { isMobile } = useNavbarStore();
-  const classes = isMobile ? 'ftso-icon-set-mobile' : 'ftso-icon-set';
-  return <SocialIcon label='Ftso.eu' className={classes} url={props.url} />;
+export default function DiscordIcon(props: { url: string }) {
+  const data = social_icons.get('discord');
+  let classes = 'fill-primary w-10 h-10 rounded-full';
+  return (
+    <Link href={props.url} target='_BLANK'>
+      <svg viewBox='0 0 64 64' className={classes}>
+        <path d={data?.path} />
+      </svg>
+    </Link>
+  );
 }
