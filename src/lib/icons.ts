@@ -3,6 +3,10 @@ export enum Icons {
   news = 'news',
   dapps = 'tools',
   info = 'info',
+  twitter = 'twitter',
+  telegram = 'telegram',
+  youtube = 'youtube',
+  discord = 'discord',
 }
 
 export type TypeIcons = keyof typeof Icons;

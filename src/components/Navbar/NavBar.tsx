@@ -21,7 +21,7 @@ function SubMenu(props: { id: string; links: any }) {
         {props.links.map((i: any) => {
           return (
             <li key={i.src}>
-              <ButtonBar src={i.src} label={i.label} />
+              <ButtonBar src={i.src} label={i.label} icon={i.icon} />
             </li>
           );
         })}

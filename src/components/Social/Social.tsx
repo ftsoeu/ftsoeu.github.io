@@ -25,5 +25,7 @@ export default function Social() {
         break;
     }
   });
-  return <div className='flex w-full flex-row'>{icons.map((i) => i)}</div>;
+  return (
+    <div className='flex w-full gap-2 flex-row'>{icons.map((i) => i)}</div>
+  );
 }

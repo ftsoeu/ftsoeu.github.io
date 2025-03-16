@@ -84,19 +84,6 @@
     text-shadow: '1px 1px 2px black';
   }
 
-  .ftso-icon-set {
-    height: 16;
-    width: 16;
-    padding: 2px;
-  }
-
-  .ftso-icon-set-mobile {
-    height: 12;
-    width: 12;
-    padding-right: 2px;
-    padding-left: 2px;
-  }
-
   .ftso-logo-line-height {
     line-height: '1.25';
   }
