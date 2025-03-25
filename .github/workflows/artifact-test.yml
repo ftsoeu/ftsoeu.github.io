@@ -1,0 +1,25 @@
+
+name: Deploy sub data folders for rewards and evmallowance
+
+on:
+  workflow_dispatch
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo hello > public/data/text.txt
+    - uses: actions/upload-artifact@v4
+      with:
+        name: my-file
+        path: public/data/text.txt
+    
