@@ -17,6 +17,7 @@ const navbarData = () => {
           icon: 'tools',
         },
         { label: 'Rewards', src: 'https://rewards.ftso.eu', icon: 'tools' },
+        { label: 'New Rewards UI', src: '/rewards', icon: 'tools' },
       ],
     },
     {
