@@ -17,6 +17,8 @@ async function getNews() {
 
 export default async function Page({ params }: any) {
   const publishedPages = await getNews();
+  console.log('heres we go?');
+  console.log(publishedPages);
   return (
     <>
       <Common title='NEWS' />
