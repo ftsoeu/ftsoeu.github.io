@@ -27,6 +27,27 @@ export type Article = {
   status: string;
 };
 
+export type Provider = {
+  provider_address: string;
+  provider_name: string;
+  logoURI: string;
+  latest_epoch_average: number;
+  average_2_weeks: number;
+  average_4_weeks: number;
+  average_2_months: number;
+};
+
+export type Output = {
+  latest_epoch: number;
+  claimable: boolean;
+  providers: Provider[];
+};
+
+export type Rewards = {
+  epoch: number;
+  output: Output;
+};
+
 export type Staking = {
   url: string;
   label: string;
@@ -72,6 +93,7 @@ export type LandingCard = {
 type Schema = {
   global: Global;
   Articles: Article[];
+  Rewards: Rewards[];
   CallToAction: CallToAction;
   CTAs: CTAs[];
   Hero: Hero;
