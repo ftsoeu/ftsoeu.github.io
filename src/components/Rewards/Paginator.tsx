@@ -10,7 +10,7 @@ export function Paginator(props: { currentPage: number; pages: number[] }) {
           if (b == props.currentPage) {
             return (
               <span
-                className='button text-primary rounded-sm p-3 m-1'
+                className='button bg-primary text-white rounded-sm p-3 m-1'
                 key={b.toString()}
               >
                 <b>{b.toString()}</b>
@@ -19,7 +19,7 @@ export function Paginator(props: { currentPage: number; pages: number[] }) {
           } else {
             return (
               <Link
-                className='button bg-primary text-white rounded-sm p-3 m-1'
+                className='button text-primary rounded-sm p-3 m-1'
                 key={b.toString()}
                 href={`/rewards/${b.toString()}`}
               >

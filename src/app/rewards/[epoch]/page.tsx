@@ -5,6 +5,7 @@ import { readItems } from '@directus/sdk';
 
 import { Providers } from '@/components/Rewards/Providers';
 import { Paginator } from '@/components/Rewards/Paginator';
+import SidePanel from '@/components/Rewards/SidePanel';
 
 interface PageProps {
   params: {
@@ -47,15 +48,20 @@ export default async function Page({ params }: any) {
     <>
       <Common title='REWARDS' />
       <MainWrapper isNavbar>
-        <div className='grid w-full grid-cols-1 lg:grid-cols-1 gap-4'>
-          <h2 className='mt-5'>
-            Epoch{' '}
-            <span className='bg-primary text-white p-3 rounded-sm'>
-              {epoch}
-            </span>
-          </h2>
-          <Paginator currentPage={epoch} pages={pList} />
-          <Providers providers={providers} />
+        <div className='grid w-full grid-cols-1 lg:grid-cols-3 gap-4'>
+          <div className='col-span-2'>
+            <h1 className='mt-5'>
+              Current Epoch{' '}
+              <span className='bg-primary text-white p-3 rounded-sm'>
+                {epoch}
+              </span>
+            </h1>
+            <Paginator currentPage={epoch} pages={pList} />
+            <Providers providers={providers} />
+          </div>
+          <div>
+            <SidePanel />
+          </div>
         </div>
       </MainWrapper>
     </>

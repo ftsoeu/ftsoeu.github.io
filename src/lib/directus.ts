@@ -16,6 +16,12 @@ type Page = {
   slug: string;
 };
 
+export type Category = {
+  id: string;
+  label: string;
+  slug: string;
+};
+
 export type Article = {
   id: string;
   cover: string;
@@ -25,6 +31,7 @@ export type Article = {
   published_date: string;
   slug: string;
   status: string;
+  Category: Category;
 };
 
 export type Provider = {
@@ -93,6 +100,7 @@ export type LandingCard = {
 type Schema = {
   global: Global;
   Articles: Article[];
+  Categories: Category[];
   Rewards: Rewards[];
   CallToAction: CallToAction;
   CTAs: CTAs[];
