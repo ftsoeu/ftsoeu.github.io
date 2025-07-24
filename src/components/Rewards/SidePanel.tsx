@@ -1,5 +1,10 @@
 import directus from '@/lib/directus';
-import { readItems } from '@directus/sdk';
+
+import { readSingleton, readItems } from '@directus/sdk';
+import RewardsCheck from '../CallToAction/RewardsCheck';
+import CallToAction from '../CallToAction/CallToAction';
+import Link from 'next/link';
+import heroData from '../Hero/heroData';
 
 async function getEpochsNews() {
   const news = await directus.request(
@@ -9,23 +14,39 @@ async function getEpochsNews() {
         status: { _eq: 'published' },
         Category: { slug: { _eq: 'epoch-news' } },
       },
+      //sort: [''],
     })
   );
   return news;
 }
 
+const getCallToAction = async () => {
+  const cta = await directus.request(readSingleton('CallToAction'));
+  return cta;
+};
 export default async function SidePanel() {
   const news = await getEpochsNews();
-  console.log(news);
+  const hero = await heroData();
   return (
     <>
-      <h3>Side Panel Test</h3>
-      <p>Testo di prova</p>
-      <ul>
+      <CallToAction data={hero.callToAction} />
+      <br />
+      <div className='w-full bg-primary p-5 rounded-t-lg'>
+        <h3 className='text-white'>Related News</h3>
+      </div>
+      <ul className='bg-slate-900 p-5 rounded-b-md'>
         {news.map((i) => {
           return (
             <>
-              <li key={i.slug}>{i.title}</li>
+              <li key={i.slug}>
+                <Link
+                  className='flex flex-row min-h-16 gap-2 py-3'
+                  href={`/news/${i.slug}`}
+                >
+                  <div className='w-16 h-16 bg-white rounded-md'></div>
+                  <h4 className='text-white'>{i.title}</h4>
+                </Link>
+              </li>
             </>
           );
         })}
