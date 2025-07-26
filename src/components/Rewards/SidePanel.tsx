@@ -14,7 +14,7 @@ async function getEpochsNews() {
         status: { _eq: 'published' },
         Category: { slug: { _eq: 'epoch-news' } },
       },
-      //sort: [''],
+      sort: ['-date_created'],
     })
   );
   return news;
@@ -32,7 +32,7 @@ export default async function SidePanel() {
       <CallToAction data={hero.callToAction} />
       <br />
       <div className='w-full bg-primary p-5 rounded-t-lg'>
-        <h3 className='text-white'>Related News</h3>
+        <h3 className='text-white text-[20px] font-bold'>Related News</h3>
       </div>
       <ul className='bg-slate-900 p-5 rounded-b-md'>
         {news.map((i) => {
