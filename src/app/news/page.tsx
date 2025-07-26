@@ -10,6 +10,7 @@ async function getNews() {
   const pages = await directus.request(
     readItems('Articles', {
       fields: ['*'],
+      sort: ['-date_created'],
     })
   );
   return pages.filter((item) => item.status === 'published');

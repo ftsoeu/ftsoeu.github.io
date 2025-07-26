@@ -12,6 +12,7 @@ async function getEpochs() {
   const pages = await directus.request(
     readItems('Rewards', {
       fields: ['*'],
+      sort: ['-epoch'],
     })
   );
   return pages;
@@ -27,18 +28,13 @@ export default async function Page({ params }: any) {
   const providers = currentEpoch[0].output.providers as Provider[];
   return (
     <>
-      <Common title='REWARDS' />
+      <Common title={`REWARDS of ${epoch}`} />
       <MainWrapper isNavbar>
-        <div className='grid w-full grid-cols-1 lg:grid-cols-3 gap-4'>
+        <div className='grid w-full grid-cols-1 lg:grid-cols-3 gap-4 mt-8'>
           <div className='col-span-2'>
-            <h1 className='mt-5'>
-              Current Epoch{' '}
-              <span className='bg-primary text-white p-3 rounded-sm'>
-                {epoch}
-              </span>
-            </h1>
             <Paginator currentPage={epoch} pages={p} />
             <Providers providers={providers} />
+            <Paginator currentPage={epoch} pages={p} />
           </div>
           <div>
             <SidePanel />

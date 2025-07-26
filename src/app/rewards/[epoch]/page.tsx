@@ -17,6 +17,7 @@ export async function generateStaticParams() {
   const pages = await directus.request(
     readItems('Rewards', {
       fields: ['*'],
+      sort: ['-epoch'],
     })
   );
   //console.log(pages);
@@ -31,6 +32,7 @@ export default async function Page({ params }: any) {
   let pages = await directus.request(
     readItems('Rewards', {
       fields: ['*'],
+      sort: ['-epoch'],
       filter: { epoch: { _eq: params.epoch as number } },
     })
   );
@@ -39,6 +41,7 @@ export default async function Page({ params }: any) {
   let pageList = await directus.request(
     readItems('Rewards', {
       fields: ['epoch'],
+      sort: ['-epoch'],
     })
   );
   let pList = pageList.map((p) => p.epoch);
@@ -48,14 +51,8 @@ export default async function Page({ params }: any) {
     <>
       <Common title='REWARDS' />
       <MainWrapper isNavbar>
-        <div className='grid w-full grid-cols-1 lg:grid-cols-3 gap-4'>
+        <div className='grid w-full grid-cols-1 lg:grid-cols-3 gap-4 mt-8'>
           <div className='col-span-2'>
-            <h1 className='mt-5'>
-              Current Epoch{' '}
-              <span className='bg-primary text-white p-3 rounded-sm'>
-                {epoch}
-              </span>
-            </h1>
             <Paginator currentPage={epoch} pages={pList} />
             <Providers providers={providers} />
           </div>
