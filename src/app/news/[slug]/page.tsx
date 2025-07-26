@@ -36,7 +36,7 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <ReadLayout>
-      <Markdown>
+      <Markdown className='prose prose-tight max-w-none'>
         {`# ${page.title}
         
         ${page.content}

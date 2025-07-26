@@ -2,8 +2,6 @@ import { social_icons } from 'react-social-icons';
 import useNavbarStore from '@/components/Navbar/useNavbarStore';
 import Link from 'next/link';
 
-console.log(social_icons.get('twitter'));
-
 export default function TwitterIcon(props: { url: string }) {
   const data = social_icons.get('twitter');
   let classes = 'fill-primary w-10 h-10 rounded-full';
