@@ -59,6 +59,27 @@ const columns: ColumnDef<Provider>[] = [
       </button>
     ),
   },
+  {
+    accessorKey: 'average_2_weeks',
+    header: ({ column }) => (
+      <button
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        className='flex items-center gap-1'
+      >
+        2 Weeks Avg
+        {column.getIsSorted() === 'asc' && '↑'}
+        {column.getIsSorted() === 'desc' && '↓'}
+      </button>
+    ),
+  },
+  {
+    accessorKey: 'average_4_weeks',
+    header: '4 Weeks Avg',
+  },
+  {
+    accessorKey: 'average_2_months',
+    header: '2 Months Avg',
+  },
 ];
 
 export function Providers(props: { providers: Provider[] }) {
@@ -126,6 +147,15 @@ export function Providers(props: { providers: Provider[] }) {
           </TableCell>
           <TableCell>
             <b>{pinnedProvider.latest_epoch_average}</b>
+          </TableCell>
+          <TableCell>
+            <b>{pinnedProvider.average_2_weeks}</b>
+          </TableCell>
+          <TableCell>
+            <b>{pinnedProvider.average_4_weeks}</b>
+          </TableCell>
+          <TableCell>
+            <b>{pinnedProvider.average_2_months}</b>
           </TableCell>
         </TableRow>
         {table.getRowModel().rows.length ? (
