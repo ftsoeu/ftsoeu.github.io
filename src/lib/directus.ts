@@ -28,7 +28,7 @@ export type Article = {
   title: string;
   author: Author;
   content: string;
-  published_date: string;
+  date_created: string;
   slug: string;
   status: string;
   Category: Category;
