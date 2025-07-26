@@ -99,6 +99,30 @@ const config = {
             textAlign: 'justify', // Imposta il testo giustificato
           },
         },
+        tight: {
+          css: {
+            h1: {
+              marginTop: '0.75em',
+              marginBottom: '0.5em',
+              textAlign: 'left',
+            },
+            h2: {
+              marginTop: '0.6em',
+              marginBottom: '0.4em',
+              textAlign: 'left',
+            },
+            h3: {
+              marginTop: '0.5em',
+              marginBottom: '0.3em',
+              textAlign: 'left',
+            },
+            p: { marginTop: '1.5em', marginBottom: '1.5em' },
+            ul: { marginTop: '0.3em', marginBottom: '0.3em' },
+            li: { marginTop: '0.15em', marginBottom: '0.15em' },
+            code: { padding: '0.15em 0.3em', fontSize: '0.95em' },
+            pre: { marginTop: '0.5em', marginBottom: '0.5em' },
+          },
+        },
       }),
     },
   },
