@@ -9,7 +9,13 @@ import heroData from '../Hero/heroData';
 async function getEpochsNews() {
   const news = await directus.request(
     readItems('Articles', {
-      fields: ['title', 'slug', 'status', { Category: ['slug'] }],
+      fields: [
+        'title',
+        'slug',
+        'status',
+        { Category: ['slug'] },
+        'date_created',
+      ],
       filter: {
         status: { _eq: 'published' },
         Category: { slug: { _eq: 'epoch-news' } },
@@ -36,6 +42,12 @@ export default async function SidePanel() {
       </div>
       <ul className='bg-slate-900 p-5 rounded-b-md'>
         {news.map((i) => {
+          const cDate = new Date(i.date_created);
+          const options: Intl.DateTimeFormatOptions = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          };
           return (
             <>
               <li key={i.slug}>
@@ -44,7 +56,12 @@ export default async function SidePanel() {
                   href={`/news/${i.slug}`}
                 >
                   <div className='w-16 h-16 bg-white rounded-md'></div>
-                  <h4 className='text-white'>{i.title}</h4>
+                  <div>
+                    <h4 className='text-white font-bold'>{i.title}</h4>
+                    <p className='text-white'>
+                      {cDate.toLocaleDateString('en-US', options)}
+                    </p>
+                  </div>
                 </Link>
               </li>
             </>
