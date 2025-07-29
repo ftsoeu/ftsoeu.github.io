@@ -4,6 +4,8 @@
   "private": false,
   "scripts": {
     "dev": "next dev -H 0.0.0.0",
+    "prebuild": "git clone --depth 1 https://github.com/flare-foundation/fsp-rewards.git ./tmp/fsp-rewards",
+    "prerun": "tsx scripts/fetch.ts",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
