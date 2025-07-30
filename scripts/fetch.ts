@@ -1,1 +1,180 @@
-console.log('hi');
+import { readdir, readFile } from 'fs/promises';
+import { number } from 'zod';
+//console.log(process.argv);
+
+const networkName = 'flare';
+const chainID = 14;
+const periods = { '2_weeks': 4, '4_weeks': 8, '2_months': 16 };
+
+const providerList =
+  'https://raw.githubusercontent.com/TowoLabs/ftso-signal-providers/next/bifrost-wallet.providerlist.json';
+
+//const cloneRepo = () => {};
+
+const getLatestEpochsFolder = async (amount: number) => {
+  const folders = await readdir(`./tmp/fsp-rewards/${networkName}`);
+  return folders.slice(-amount);
+};
+
+const fetchProviderDetails = async () => {
+  try {
+    const resp = await fetch(providerList);
+    const list = await resp.json();
+    const fList = list.providers.filter((i: any) => {
+      if (i.chainId === chainID) {
+        return i;
+      }
+    });
+    return fList;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+const fetchClaimableStatus = () => {};
+
+const extractEpochData = async (epoch: number, providersDetails: {}[]) => {
+  const rewardDistData = JSON.parse(
+    await readFile(
+      `./tmp/fsp-rewards/${networkName}/${epoch}/reward-distribution-data.json`,
+      'utf-8'
+    )
+  );
+  const rewardEpochInfo = JSON.parse(
+    await readFile(
+      `./tmp/fsp-rewards/${networkName}/${epoch}/reward-epoch-info.json`,
+      'utf-8'
+    )
+  );
+
+  const epochResults: any = {};
+
+  for (const claim of rewardDistData.rewardClaims) {
+    const beneficiary = claim.body.beneficiary;
+    const amount = parseInt(claim.body.amount);
+
+    const voterInfo = rewardEpochInfo.voterRegistrationInfo.find(
+      (info: any) =>
+        info.voterRegistrationInfo.delegationAddress === beneficiary
+    );
+
+    if (voterInfo) {
+      const delegationAddress =
+        voterInfo.voterRegistrationInfo.delegationAddress;
+      const wNatWeight = parseInt(voterInfo.voterRegistrationInfo.wNatWeight);
+
+      if (wNatWeight === 0) {
+        console.log(`Saltato provider ${delegationAddress} con wNatWeight=0`);
+        continue;
+      }
+
+      const rewardRate = Math.round((amount / wNatWeight) * 100 * 1e5) / 1e5;
+
+      const providerInfo: any = providersDetails.find(
+        (p: any) => p.address.toLowerCase() === delegationAddress.toLowerCase()
+      ) ?? {
+        name: 'Unknown',
+        logoURI: '',
+      };
+
+      if (!epochResults[delegationAddress]) {
+        epochResults[delegationAddress] = {
+          provider_name: providerInfo.name,
+          logoURI: providerInfo.logoURI,
+          reward_rates: [],
+        };
+      }
+
+      epochResults[delegationAddress].reward_rates.push(rewardRate);
+    }
+  }
+
+  return epochResults;
+};
+
+const combineEpochsData = async (
+  folders: number[],
+  providerDetails: any[],
+  periods: { [key: string]: number },
+  latestEpochFolder: number
+): Promise<any[]> => {
+  const combinedResults: { [address: string]: any } = {};
+
+  const latestEpochData = await extractEpochData(
+    latestEpochFolder,
+    providerDetails
+  );
+
+  for (const folder of folders) {
+    const epochData = await extractEpochData(folder, providerDetails);
+
+    for (const [address, data] of Object.entries(epochData) as [
+      string,
+      any
+    ][]) {
+      if (!combinedResults[address]) {
+        combinedResults[address] = {
+          provider_name: data.provider_name,
+          logoURI: data.logoURI,
+          reward_rates: [],
+        };
+      }
+
+      combinedResults[address].reward_rates.push(...data.reward_rates);
+    }
+  }
+
+  const results: any[] = [];
+
+  for (const [address, data] of Object.entries(combinedResults)) {
+    const averages: { [key: string]: any } = {};
+
+    for (const [label, numEpochs] of Object.entries(periods)) {
+      const rates = data.reward_rates.slice(-numEpochs);
+
+      if (
+        data.reward_rates.length < numEpochs ||
+        rates.length < numEpochs ||
+        rates.some((rate: number) => rate === 0)
+      ) {
+        averages[label] = 'missing rewards for this range';
+      } else {
+        const avg =
+          rates.reduce((acc: number, val: number) => acc + val, 0) /
+          rates.length;
+        averages[label] = Math.round(avg * 1e5) / 1e5;
+      }
+    }
+
+    const latestRates = latestEpochData[address]?.reward_rates;
+    const latestEpochAverage =
+      latestRates && latestRates.length > 0
+        ? latestRates[latestRates.length - 1]
+        : 'missing rewards for this range';
+
+    results.push({
+      provider_address: address,
+      provider_name: data.provider_name,
+      logoURI: data.logoURI,
+      latest_epoch_average: latestEpochAverage,
+      average_2_weeks: averages['2_weeks'],
+      average_4_weeks: averages['4_weeks'],
+      average_2_months: averages['2_months'],
+    });
+  }
+
+  return results;
+};
+
+const saveToJson = () => {};
+
+const main = async () => {
+  const epochsFolder = await getLatestEpochsFolder(16);
+  const epochNFolder = epochsFolder.map(Number);
+  const lastEpoch = Number(epochsFolder.pop());
+  const pList = await fetchProviderDetails();
+  const res = await combineEpochsData(epochNFolder, pList, periods, lastEpoch);
+  console.log(res);
+};
+
+main();
