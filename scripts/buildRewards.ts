@@ -34,8 +34,11 @@ const providerList =
   process.env.TOWOLAB ||
   'https://raw.githubusercontent.com/TowoLabs/ftso-signal-providers/next/bifrost-wallet.providerlist.json';
 
-const getLatestEpochsFolder = async (amount: number) => {
+const getLatestEpochsFolder = async (amount: number | string) => {
   const folders = await readdir(`./tmp/fsp-rewards/${networkName}`);
+  if (amount === 'all') {
+    return folders;
+  }
   return folders.slice(-amount);
 };
 
@@ -225,18 +228,13 @@ const pushToDirectusProviders = async (p: []) => {
 };
 
 const main = async () => {
-  const epochsFolder = await getLatestEpochsFolder(16);
-  const epochNFolder = epochsFolder.map(Number);
-  const lastEpoch = Number(epochsFolder.pop());
-  const pList = await fetchProviderDetails();
-  const res = await combineEpochsData(epochNFolder, pList, periods, lastEpoch);
+  const epochsFolder = await getLatestEpochsFolder('all');
 
-  let reward = {
-    epoch: lastEpoch,
-    output: { latest_epoch: lastEpoch, providers: res },
-  };
-  await pushToDirectusProviders(pList);
-  await pushToDirectusRewards(reward);
+  const pList = await fetchProviderDetails();
+
+  const d = await extractEpochData(314, pList);
+
+  console.log(d);
 };
 
 main();
