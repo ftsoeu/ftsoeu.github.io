@@ -16,13 +16,19 @@ type Page = {
   slug: string;
 };
 
+export type Category = {
+  id: string;
+  label: string;
+  slug: string;
+};
+
 export type Article = {
   id: string;
   cover: string;
   title: string;
   author: Author;
   content: string;
-  published_date: string;
+  date_created: string;
   slug: string;
   status: string;
 };

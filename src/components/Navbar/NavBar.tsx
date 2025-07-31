@@ -10,6 +10,7 @@ import Logo from '@/components/Icons/Logo';
 import ButtonBar from './ButtonBar';
 import { TypeIcons } from '@/lib/icons';
 import useSubStore from './useSubStore';
+import ConnectButton from '../Connect/ConnectButton';
 
 function SubMenu(props: { id: string; links: any }) {
   let { subject, isOpen } = useSubStore();
@@ -25,6 +26,9 @@ function SubMenu(props: { id: string; links: any }) {
             </li>
           );
         })}
+        <li key='connect'>
+          <ConnectButton />
+        </li>
       </ul>
     );
   } else {
@@ -75,6 +79,9 @@ function DesktopNav(props: { links: NavLink[] }) {
             );
           }
         })}
+        <li key='connect'>
+          <ConnectButton />
+        </li>
       </ul>
     </>
   );

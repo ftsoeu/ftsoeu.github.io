@@ -6,6 +6,9 @@ import MobileList from '@/components/Navbar/MobileList';
 import Footer from '@/components/Footer/Footer';
 import { headers } from 'next/headers';
 
+import { WagmiProvider } from 'wagmi';
+import { config } from '@/lib/wagmiConfig';
+
 import Script from 'next/script';
 
 const inter = Roboto({ weight: '400', subsets: ['latin'] });
