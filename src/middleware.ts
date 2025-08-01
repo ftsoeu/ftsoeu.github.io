@@ -8,6 +8,7 @@ export function middleware(req: NextRequest) {
 
   const csp = `
     default-src 'self';
+    connect-src 'self' https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu;
     img-src 'self' 'nonce-${nonce}' https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu;
     script-src 'self' 'nonce-${nonce}' https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu https://unpkg.com/spacingjs http://localhost:3000 'unsafe-eval';
     style-src 'self' 'nonce-${nonce}' https://next.ftso.local https://webdata.ftso.eu;

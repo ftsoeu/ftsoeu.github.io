@@ -7,6 +7,7 @@ import { injected } from '@wagmi/connectors';
 
 export const config = createConfig({
   chains: [flare, songbird],
+  ssr: false,
   connectors: [injected()], // qui metterai i tuoi connettori
   transports: {
     [flare.id]: http(),

@@ -1,44 +1,27 @@
 'use client';
-import { WagmiProvider } from 'wagmi';
-import { config } from '@/lib/wagmiConfig';
 
-export function WagmiWrapper({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = useState(false);
+import dynamic from 'next/dynamic';
+import ClientOnly from '../ClientOnly/ClientOnly';
+import WagmiWrapper from '@/components/Connect/WagmiWrapper';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState } from 'react';
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
-
-  return <WagmiProvider config={config}>{children}</WagmiProvider>;
-}
-import { injected, useAccount, useConnect, useDisconnect } from 'wagmi';
-import { useWalletStore } from '@/lib/zustand';
-import { useEffect, useState } from 'react';
+const InnerConnect = dynamic(
+  () => import('@/components/Connect/InnerConnect'),
+  {
+    ssr: false,
+  }
+);
 
 export default function ConnectButton() {
-  const { address, isConnected } = useAccount();
-  const connect = useConnect();
-  const disconnect = useDisconnect();
-  const setAddress = useWalletStore((s) => s.setAddress);
-
-  if (address) setAddress(address);
-
+  const [queryClient] = useState(() => new QueryClient());
   return (
-    <div>
-      <WagmiWrapper>
-        {isConnected ? (
-          <>
-            <p>Connected: {address}</p>
-            <button onClick={() => disconnect.disconnect()}>Disconnect</button>
-          </>
-        ) : (
-          <button onClick={() => connect.connect({ connector: injected() })}>
-            Connect Wallet
-          </button>
-        )}
-      </WagmiWrapper>
-    </div>
+    <ClientOnly>
+      <QueryClientProvider client={queryClient}>
+        <WagmiWrapper>
+          <InnerConnect />
+        </WagmiWrapper>
+      </QueryClientProvider>
+    </ClientOnly>
   );
 }

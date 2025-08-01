@@ -10,7 +10,13 @@ import Logo from '@/components/Icons/Logo';
 import ButtonBar from './ButtonBar';
 import { TypeIcons } from '@/lib/icons';
 import useSubStore from './useSubStore';
-import ConnectButton from '../Connect/ConnectButton';
+import dynamic from 'next/dynamic';
+
+//import ConnectButton from '../Connect/ConnectButton';
+
+const ConnectButton = dynamic(() => import('../Connect/ConnectButton'), {
+  ssr: false,
+});
 
 function SubMenu(props: { id: string; links: any }) {
   let { subject, isOpen } = useSubStore();

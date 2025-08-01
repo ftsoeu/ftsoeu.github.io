@@ -23,10 +23,22 @@ const lhost =
   .replace(/\s{2,}/g, ' ')
   .trim();*/
 
-const cspHeader = `
+/* funzionante pre login web3 const cspHeader = `
   default-src 'self' https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu http://localhost:3000;
   img-src 'self' https://webdata.ftso.eu data: blob: *;  
   frame-src 'self' https://next.ftso.local https://directus.ftso.local https://next.ftso.local https://webdata.ftso.eu http://localhost:3000; 
+  child-src 'self' blob:; 
+  frame-ancestors 'self' https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu http://localhost:3000;
+  script-src 'self' https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu http://localhost:3000;
+  style-src 'self' https://next.ftso.local http://localhost:3000;
+`
+  .replace(/\s{2,}/g, ' ')
+  .trim();*/
+const cspHeader = `
+  default-src 'self';
+  connect-src 'self' https://webdata.ftso.eu http://localhost:3000 https://directus.ftso.local;
+  img-src 'self' https://webdata.ftso.eu data: blob: *;  
+  frame-src 'self' https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu http://localhost:3000; 
   child-src 'self' blob:; 
   frame-ancestors 'self' https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu http://localhost:3000;
   script-src 'self' https://next.ftso.local https://directus.ftso.local https://webdata.ftso.eu http://localhost:3000;
@@ -106,15 +118,15 @@ const nextConfig = {
           { key: 'X-Forwarded-Proto', value: 'https' },
           {
             key: 'Access-Control-Allow-Origin',
-            value: lhost, // Consenti richieste da Directus
+            value: '*', //value: lhost, // Consenti richieste da Directus
           },
           {
             key: 'Access-Control-Allow-Methods',
-            value: 'GET, POST, PUT, DELETE',
+            value: 'GET, POST, PUT, DELETE, OPTIONS',
           },
           {
             key: 'Access-Control-Allow-Headers',
-            value: 'Content-Type',
+            value: 'Content-Type, Authorization',
           },
           {
             key: 'X-Frame-Options',

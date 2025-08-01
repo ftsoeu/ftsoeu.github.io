@@ -1,13 +1,16 @@
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 import './globals.css';
-import NavBar from '@/components/Navbar/NavBar';
+//import NavBar from '@/components/Navbar/NavBar';
 import MobileList from '@/components/Navbar/MobileList';
 import Footer from '@/components/Footer/Footer';
 import { headers } from 'next/headers';
 
-import { WagmiProvider } from 'wagmi';
-import { config } from '@/lib/wagmiConfig';
+import dynamic from 'next/dynamic';
+
+const NavBar = dynamic(() => import('@/components/Navbar/NavBar'), {
+  ssr: false,
+});
 
 import Script from 'next/script';
 
