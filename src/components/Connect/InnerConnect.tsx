@@ -2,8 +2,6 @@
 
 import { useAccount, useConnect, useDisconnect, useSignMessage } from 'wagmi';
 import { injected } from '@wagmi/connectors';
-import { useEffect } from 'react';
-import axios from 'axios';
 
 export default function InnerConnect() {
   const { address, isConnected } = useAccount();
@@ -17,13 +15,15 @@ export default function InnerConnect() {
     try {
       const data = await connectAsync({ connector: injected() });
       const account = data.accounts[0];
-      const message = `Login to FtsoEU\nDomain: ${
-        window.location.origin
-      }\nAddress: ${account}\nTime: ${new Date().toISOString()}`;
+      const cDate = new Date().toISOString();
+      const cSource = window.location.origin;
+      const message = `Login to FtsoEU\nDomain: ${cSource}\nAddress: ${account}\nTime: ${cDate}`;
       const signature = await signMessageAsync({ message });
 
       const body = new URLSearchParams();
       body.append('address', account);
+      body.append('source', cSource);
+      body.append('time', cDate);
       body.append('message', message);
       body.append('signature', signature);
 
@@ -45,11 +45,20 @@ export default function InnerConnect() {
     <div>
       {isConnected ? (
         <>
-          <p>{address}</p>
-          <button onClick={() => disconnect()}>Disconnect</button>
+          <button
+            className='font-thin ml-2 pt-1 text-sm'
+            onClick={() => disconnect()}
+          >
+            DISCONNECT
+          </button>
         </>
       ) : (
-        <button onClick={handleConnectAndSign}>Connect & Sign</button>
+        <button
+          className='font-thin ml-2 pt-1 text-sm'
+          onClick={handleConnectAndSign}
+        >
+          CONNECT
+        </button>
       )}
     </div>
   );

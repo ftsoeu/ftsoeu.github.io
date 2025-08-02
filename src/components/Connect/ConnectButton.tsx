@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import ClientOnly from '../ClientOnly/ClientOnly';
+import ClientOnly from '@/components/Connect/ClientOnly';
 import WagmiWrapper from '@/components/Connect/WagmiWrapper';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
