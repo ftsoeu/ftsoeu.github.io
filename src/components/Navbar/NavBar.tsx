@@ -11,6 +11,7 @@ import ButtonBar from './ButtonBar';
 import { TypeIcons } from '@/lib/icons';
 import useSubStore from './useSubStore';
 import dynamic from 'next/dynamic';
+import UserIcon from '../Icons/UserIcon';
 
 //import ConnectButton from '../Connect/ConnectButton';
 
@@ -32,9 +33,6 @@ function SubMenu(props: { id: string; links: any }) {
             </li>
           );
         })}
-        <li key='connect'>
-          <ConnectButton />
-        </li>
       </ul>
     );
   } else {
@@ -86,7 +84,10 @@ function DesktopNav(props: { links: NavLink[] }) {
           }
         })}
         <li key='connect'>
-          <ConnectButton />
+          <div className='p-2 pr-4 flex flex-row rounded-sm  items-center hover:bg-primary hover:text-[#ffffff] hover:dark:text-white'>
+            <UserIcon />
+            <ConnectButton />
+          </div>
         </li>
       </ul>
     </>
