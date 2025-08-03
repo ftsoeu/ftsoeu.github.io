@@ -5,30 +5,56 @@ import { number } from 'zod';
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
 
-const getNet = () => {
-  const gett = process.argv[2];
-  console.log(gett);
-  if (gett.startsWith('--network=')) {
-    const net = gett.replace('--network=', '');
-    switch (net) {
-      case 'flare':
-        return { networkName: 'flare', chainID: 14 };
-        break;
-      case 'songbird':
-        return { networkName: 'songbird', chainID: 19 };
-        break;
-      default:
-        return { networkName: 'flare', chainID: 14 };
+const getArgv = () => {
+  const gett = process.argv;
+  let networkName = 'flare';
+  let chainID = 14;
+  let epochs = ['228'];
+
+  for (let arg = 0; arg < process.argv.length; arg++) {
+    if (gett[arg].startsWith('--network=')) {
+      const net = gett[arg].replace('--network=', '');
+      switch (net) {
+        case 'flare':
+          networkName = 'flare';
+          chainID = 14;
+          break;
+        case 'songbird':
+          networkName = 'songbird';
+          chainID = 19;
+          break;
+      }
     }
-    return { networkName: 'flare', chainID: 14 };
+
+    if (gett[arg].startsWith('--epochs=')) {
+      const eps = gett[arg].replace('--epochs=', '');
+      if (eps.includes(' ')) {
+        console.log('hit');
+        epochs = eps.split(' ');
+      } else {
+        epochs = [eps];
+      }
+      if (eps.includes(':')) {
+        const range = eps.split(':');
+        const min = Number(range[0]);
+        const max = Number(range[1]);
+        epochs = [];
+        for (let eStart = min; eStart <= max; eStart++) {
+          epochs.push(eStart.toString());
+        }
+      }
+    }
   }
-  return { networkName: 'flare', chainID: 14 };
+  return { networkName, chainID, epochs };
 };
 
-const { networkName, chainID } = getNet();
+const { networkName, chainID, epochs } = getArgv();
 const periods = { '2_weeks': 4, '4_weeks': 8, '2_months': 16 };
 
-console.log(`Process working on ${networkName} with ${chainID}`);
+console.log(
+  `Process working on ${networkName} with ${chainID} on the epochs`,
+  epochs
+);
 
 const providerList =
   process.env.TOWOLAB ||
@@ -77,7 +103,7 @@ const extractEpochData = async (epoch: number, providersDetails: {}[]) => {
 
   for (const claim of rewardDistData.rewardClaims) {
     const beneficiary = claim.body.beneficiary;
-    const amount = parseInt(claim.body.amount);
+    const amount = Number(claim.body.amount) / 1e18;
 
     const voterInfo = rewardEpochInfo.voterRegistrationInfo.find(
       (info: any) =>
@@ -87,15 +113,19 @@ const extractEpochData = async (epoch: number, providersDetails: {}[]) => {
     if (voterInfo) {
       const delegationAddress =
         voterInfo.voterRegistrationInfo.delegationAddress;
-      const wNatWeight = parseInt(voterInfo.voterRegistrationInfo.wNatWeight);
+      const wNatWeight =
+        Number(voterInfo.voterRegistrationInfo.wNatWeight) / 1e18; //parseInt(voterInfo.voterRegistrationInfo.wNatWeight);
 
       if (wNatWeight === 0) {
         console.log(`Saltato provider ${delegationAddress} con wNatWeight=0`);
         continue;
       }
 
+      console.log('Provider wheight:', wNatWeight);
+      const formatted = wNatWeight.toLocaleString('it-IT');
+      console.log('Provider wheight formatted:', formatted);
       const rewardRate = Math.round((amount / wNatWeight) * 100 * 1e5) / 1e5;
-
+      console.log('rewardRate:', rewardRate);
       const providerInfo: any = providersDetails.find(
         (p: any) => p.address.toLowerCase() === delegationAddress.toLowerCase()
       ) ?? {
@@ -234,7 +264,7 @@ const main = async () => {
 
   const d = await extractEpochData(314, pList);
 
-  console.log(d);
+  //console.log(d);
 };
 
 main();
