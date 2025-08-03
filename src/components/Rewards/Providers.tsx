@@ -136,7 +136,7 @@ export function Providers(props: { providers: Provider[] }) {
             <img
               width={imgW}
               height={imgH}
-              src={`/images/ftsos/${pinnedProvider.provider_address}.png`}
+              src={`/images/ftsos/${pinnedProvider.provider_address.toLocaleLowerCase()}.png`}
             />
           </TableCell>
           <TableCell className='font-medium'>
