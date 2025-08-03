@@ -27,7 +27,7 @@ const columns: ColumnDef<Provider>[] = [
     accessorKey: 'logoURI',
     header: 'Logo',
     cell: ({ row }) => {
-      const logoPath = row.original.logoURI?.split('/').pop();
+      const logoPath = row.original.logoURI?.split('/').pop()?.toLowerCase();
       return (
         <img
           src={`/images/ftsos/${logoPath}`}
