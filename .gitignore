@@ -18,6 +18,9 @@
 # production
 /build
 
+# data fps-rewards
+/tmp
+
 # dotenv
 .env
 

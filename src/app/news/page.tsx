@@ -10,6 +10,7 @@ async function getNews() {
   const pages = await directus.request(
     readItems('Articles', {
       fields: ['*'],
+      sort: ['-date_created'],
     })
   );
   return pages.filter((item) => item.status === 'published');
@@ -17,6 +18,8 @@ async function getNews() {
 
 export default async function Page({ params }: any) {
   const publishedPages = await getNews();
+  console.log('heres we go?');
+  console.log(publishedPages);
   return (
     <>
       <Common title='NEWS' />

@@ -16,15 +16,43 @@ type Page = {
   slug: string;
 };
 
+export type Category = {
+  id: string;
+  label: string;
+  slug: string;
+};
+
 export type Article = {
   id: string;
   cover: string;
   title: string;
   author: Author;
   content: string;
-  published_date: string;
+  date_created: string;
   slug: string;
   status: string;
+  Category: Category;
+};
+
+export type Provider = {
+  provider_address: string;
+  provider_name: string;
+  logoURI: string;
+  latest_epoch_average: number;
+  average_2_weeks: number;
+  average_4_weeks: number;
+  average_2_months: number;
+};
+
+export type Output = {
+  latest_epoch: number;
+  claimable: boolean;
+  providers: Provider[];
+};
+
+export type Rewards = {
+  epoch: number;
+  output: Output;
 };
 
 export type Staking = {
@@ -72,6 +100,8 @@ export type LandingCard = {
 type Schema = {
   global: Global;
   Articles: Article[];
+  Categories: Category[];
+  Rewards: Rewards[];
   CallToAction: CallToAction;
   CTAs: CTAs[];
   Hero: Hero;
