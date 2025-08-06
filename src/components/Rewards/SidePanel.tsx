@@ -6,6 +6,13 @@ import CallToAction from '../CallToAction/CallToAction';
 import Link from 'next/link';
 import heroData from '../Hero/heroData';
 
+import { Provider } from '@/lib/directus';
+type RankedProvider = Provider & {
+  avgPerformance: number;
+  stability: number;
+  score: number;
+};
+
 async function getEpochsNews() {
   const news = await directus.request(
     readItems('Articles', {
@@ -30,9 +37,12 @@ const getCallToAction = async () => {
   const cta = await directus.request(readSingleton('CallToAction'));
   return cta;
 };
-export default async function SidePanel() {
+export default async function SidePanel(props: {
+  providers: RankedProvider[];
+}) {
   const news = await getEpochsNews();
   const hero = await heroData();
+  const providers = props.providers.slice(0, 5);
   return (
     <>
       <CallToAction data={hero.callToAction} />
@@ -68,6 +78,23 @@ export default async function SidePanel() {
           );
         })}
       </ul>
+      {/*<br />
+      <div className='w-full bg-primary p-5 rounded-t-lg'>
+        <h3 className='text-white text-[20px] font-bold'>
+          Top Provider Epoch Snapshot
+        </h3>
+      </div>
+      <ul className='bg-slate-900 p-5 rounded-b-md'>
+        {providers.map((e) => {
+          return (
+            <>
+              <li>
+                <span className='text-white font-bold'>{e.provider_name}</span>
+              </li>
+            </>
+          );
+        })}
+      </ul>*/}
     </>
   );
 }
