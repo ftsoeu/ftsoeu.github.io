@@ -18,6 +18,45 @@ async function getEpochs() {
   return pages;
 }
 
+type RankedProvider = Provider & {
+  avgPerformance: number;
+  stability: number;
+  score: number;
+};
+
+export function rankProviders(providers: Provider[]): RankedProvider[] {
+  return providers
+    .map((p) => {
+      const latest = Number(p.latest_epoch_average);
+      const avg2w = Number(p.average_2_weeks);
+      const avg4w = Number(p.average_4_weeks);
+      const avg2m = Number(p.average_2_months);
+
+      const averages = [avg2w, avg4w, avg2m];
+      const checkVariation = (avg: number) =>
+        avg !== 0 ? Math.abs(latest - avg) / avg : 1;
+
+      const stability = Math.max(
+        checkVariation(avg2w),
+        checkVariation(avg4w),
+        checkVariation(avg2m)
+      );
+
+      const avgPerformance = (latest + avg2w + avg4w + avg2m) / 4;
+
+      // SCORE: penalizza instabilità
+      const score = avgPerformance / (1 + stability * 2); // 2 = peso penalità instabilità
+
+      return {
+        ...p,
+        avgPerformance,
+        stability,
+        score,
+      };
+    })
+    .sort((a, b) => b.score - a.score);
+}
+
 export default async function Page({ params }: any) {
   const currentEpoch = await getEpochs();
   let p = [];
@@ -26,6 +65,8 @@ export default async function Page({ params }: any) {
   }
   const epoch = currentEpoch[0].epoch;
   const providers = currentEpoch[0].output.providers as Provider[];
+  const topProviders = rankProviders(providers);
+
   return (
     <>
       <Common title={`REWARDS of ${epoch}`} />
@@ -37,7 +78,7 @@ export default async function Page({ params }: any) {
             <Paginator currentPage={epoch} pages={p} />
           </div>
           <div>
-            <SidePanel />
+            <SidePanel providers={topProviders} />
           </div>
         </div>
       </MainWrapper>

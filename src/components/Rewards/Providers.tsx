@@ -21,6 +21,11 @@ import {
 } from '@/components/ui/table';
 import { Provider } from '@/lib/directus';
 import { useState } from 'react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@radix-ui/react-tooltip';
 
 const columns: ColumnDef<Provider>[] = [
   {
@@ -41,6 +46,62 @@ const columns: ColumnDef<Provider>[] = [
   {
     accessorKey: 'provider_name',
     header: 'Name',
+    cell: ({ row }) => {
+      const name = row.original.provider_name;
+      const latest = Number(row.original.latest_epoch_average);
+      const avg2w = Number(row.original.average_2_weeks);
+      const avg4w = Number(row.original.average_4_weeks);
+      const avg2m = Number(row.original.average_2_months);
+
+      const checkVariation = (avg: number) =>
+        avg !== 0 ? Math.abs(latest - avg) / avg : 0;
+
+      const variations = [
+        checkVariation(avg2w),
+        checkVariation(avg4w),
+        checkVariation(avg2m),
+      ];
+
+      const maxVar = Math.max(...variations);
+
+      let icon = null;
+      let title = '';
+
+      if (maxVar > 0.6) {
+        icon = '❗';
+        title =
+          'High Inconsistency: > 60% variation between latest and averages';
+      } else if (maxVar > 0.3) {
+        icon = '⚠️';
+        title = 'Moderate Inconsistency: > 30% variation';
+      }
+
+      return (
+        <div className='flex items-center gap-2'>
+          <span>{name}</span>
+          {icon && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className='text-red-600 cursor-help text-sm'
+                  role='img'
+                  aria-label='variation warning'
+                  tabIndex={0}
+                >
+                  {icon}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent
+                side='top'
+                className='bg-zinc-900 text-white text-sm px-3 py-2 rounded-md shadow-xl max-w-xs'
+              >
+                <p>{title}</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </div>
+      );
+    },
   },
   {
     accessorKey: 'provider_address',
@@ -160,7 +221,28 @@ export function Providers(props: { providers: Provider[] }) {
         </TableRow>
         {table.getRowModel().rows.length ? (
           table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
+            <TableRow
+              key={row.id}
+              className={(() => {
+                const latest = Number(row.original.latest_epoch_average);
+                const avg2w = Number(row.original.average_2_weeks);
+                const avg4w = Number(row.original.average_4_weeks);
+                const avg2m = Number(row.original.average_2_months);
+
+                const checkVariation = (avg: number) =>
+                  avg !== 0 ? Math.abs(latest - avg) / avg : 0;
+
+                const maxVar = Math.max(
+                  checkVariation(avg2w),
+                  checkVariation(avg4w),
+                  checkVariation(avg2m)
+                );
+
+                if (maxVar > 0.6) return 'bg-red-50';
+                if (maxVar > 0.3) return 'bg-yellow-50';
+                return '';
+              })()}
+            >
               {row.getVisibleCells().map((cell) => (
                 <TableCell key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}

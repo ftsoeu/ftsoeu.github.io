@@ -5,6 +5,7 @@ import NavBar from '@/components/Navbar/NavBar';
 import MobileList from '@/components/Navbar/MobileList';
 import Footer from '@/components/Footer/Footer';
 import { headers } from 'next/headers';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 import Script from 'next/script';
 
@@ -33,7 +34,7 @@ export default function RootLayout({
         <div className='absolute w-full h-full'>
           <NavBar />
           <MobileList />
-          {children}
+          <TooltipProvider>{children}</TooltipProvider>
           <Footer />
         </div>
       </body>

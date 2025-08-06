@@ -6,6 +6,7 @@ import { readItems } from '@directus/sdk';
 import { Providers } from '@/components/Rewards/Providers';
 import { Paginator } from '@/components/Rewards/Paginator';
 import SidePanel from '@/components/Rewards/SidePanel';
+import { rankProviders } from '../page';
 
 interface PageProps {
   params: {
@@ -47,6 +48,7 @@ export default async function Page({ params }: any) {
   let pList = pageList.map((p) => p.epoch);
   const epoch = currentEpoch[0].epoch;
   const providers = currentEpoch[0].output.providers as Provider[];
+  const topProviders = rankProviders(providers);
   return (
     <>
       <Common title='REWARDS' />
@@ -57,7 +59,7 @@ export default async function Page({ params }: any) {
             <Providers providers={providers} />
           </div>
           <div>
-            <SidePanel />
+            <SidePanel providers={topProviders} />
           </div>
         </div>
       </MainWrapper>
