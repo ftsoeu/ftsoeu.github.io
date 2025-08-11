@@ -6,7 +6,7 @@ on:
 jobs:
   prebuild:
     runs-on: ubuntu-latest
-    environment: production
+    environment: github-pages
     env:
       DIRECTUS_URL: ${{ vars.DIRECTUS_URL }}
       DIRECTUS_TOKEN: ${{ secrets.DIRECTUS_TOKEN }}
