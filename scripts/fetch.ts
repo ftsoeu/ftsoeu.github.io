@@ -6,29 +6,45 @@ import dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
 
 const getNet = () => {
-  const gett = process.argv[2];
+  const gett = process.argv;
   console.log(gett);
-  if (gett.startsWith('--network=')) {
-    const net = gett.replace('--network=', '');
-    switch (net) {
-      case 'flare':
-        return { networkName: 'flare', chainID: 14 };
-        break;
-      case 'songbird':
-        return { networkName: 'songbird', chainID: 19 };
-        break;
-      default:
-        return { networkName: 'flare', chainID: 14 };
+
+  let networkName = 'flare';
+  let chainID = 14;
+  let epoch = 0;
+
+  for (let arg = 0; arg < process.argv.length; arg++) {
+    console.log(gett[arg]);
+
+    if (gett[arg].startsWith('--epoch=')) {
+      const lastEpoch = gett[arg].replace('--epoch=', '');
+      epoch = Number(lastEpoch);
     }
-    return { networkName: 'flare', chainID: 14 };
+
+    if (gett[arg].startsWith('--network=')) {
+      const net = gett[arg].replace('--network=', '');
+      switch (net) {
+        case 'flare':
+          networkName = 'flare';
+          chainID = 14;
+          break;
+        case 'songbird':
+          networkName = 'songbird';
+          chainID = 19;
+          break;
+      }
+    }
   }
-  return { networkName: 'flare', chainID: 14 };
+
+  return { networkName, chainID, epoch };
 };
 
-const { networkName, chainID } = getNet();
+const { networkName, chainID, epoch } = getNet();
 const periods = { '2_weeks': 4, '4_weeks': 8, '2_months': 16 };
 
-console.log(`Process working on ${networkName} with ${chainID}`);
+console.log(
+  `Process working on ${networkName} with ${chainID} as last epoch: ${epoch}`
+);
 
 const providerList =
   process.env.TOWOLAB ||
@@ -174,8 +190,9 @@ const combineEpochsData = async (
       latestRates && latestRates.length > 0
         ? latestRates[latestRates.length - 1]
         : 'missing rewards for this range';
+    // 0x6c5c813dd19f071be0b6e83701955810f118e717
 
-    results.push({
+    let objToPush = {
       provider_address: address,
       provider_name: data.provider_name,
       logoURI: data.logoURI,
@@ -183,7 +200,14 @@ const combineEpochsData = async (
       average_2_weeks: averages['2_weeks'],
       average_4_weeks: averages['4_weeks'],
       average_2_months: averages['2_months'],
-    });
+    };
+
+    if (
+      objToPush.provider_address == '0x6c5c813dd19f071be0b6e83701955810f118e717'
+    ) {
+      console.log(objToPush);
+    }
+    results.push(objToPush);
   }
 
   return results;
@@ -227,15 +251,22 @@ const pushToDirectusProviders = async (p: []) => {
 const main = async () => {
   const epochsFolder = await getLatestEpochsFolder(16);
   const epochNFolder = epochsFolder.map(Number);
-  const lastEpoch = Number(epochsFolder.pop());
+  console.log(epoch);
+  let lastEpoch = Number(epochsFolder.pop());
+  if (epoch != 0) {
+    lastEpoch = epoch;
+  }
+
   const pList = await fetchProviderDetails();
   const res = await combineEpochsData(epochNFolder, pList, periods, lastEpoch);
 
   let reward = {
     epoch: lastEpoch,
     output: { latest_epoch: lastEpoch, providers: res },
+    chainId: chainID,
   };
-  await pushToDirectusProviders(pList);
+
+  //await pushToDirectusProviders(pList);
   await pushToDirectusRewards(reward);
 };
 

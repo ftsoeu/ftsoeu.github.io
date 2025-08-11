@@ -6,7 +6,7 @@
     "dev": "next dev -H 0.0.0.0",
     "renameimage": "tsx scripts/rename-image.ts",
     "prebuild": "rimraf ./tmp && git clone --depth 1 https://github.com/flare-foundation/fsp-rewards.git ./tmp/fsp-rewards",
-    "prerun": "tsx scripts/fetch.ts",
+    "legacy": "tsx scripts/fetch.ts",
     "build:rewards": "tsx scripts/buildRewards.ts",
     "build": "next build",
     "start": "next start",
