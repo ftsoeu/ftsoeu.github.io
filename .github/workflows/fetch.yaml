@@ -7,7 +7,7 @@ jobs:
   prebuild:
     runs-on: ubuntu-latest
     env:
-      DIRECTUS_URL: ${{ secrets.NEXT_PUBLIC_DIRECTUS_URL }}
+      DIRECTUS_URL: ${{ vars.DIRECTUS_URL }}
       DIRECTUS_TOKEN: ${{ secrets.DIRECTUS_TOKEN }}
       NODE_ENV: production
     steps:
