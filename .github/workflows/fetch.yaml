@@ -31,6 +31,15 @@ jobs:
         run: |
           yarn prebuild
 
+      - name: Debug env
+        run: |
+          echo "DIRECTUS_URL is: ${DIRECTUS_URL}"
+          echo "Length: ${#DIRECTUS_URL}"
+          if [ -z "$DIRECTUS_URL" ]; then
+            echo "❌ DIRECTUS_URL is empty"
+            exit 1
+          fi
+
       - name: Esegui lo script TS
         run: |
           # usa tsx installato nelle devDependencies
