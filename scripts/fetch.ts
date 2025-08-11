@@ -1,9 +1,12 @@
 import { readdir, readFile } from 'fs/promises';
 import { number } from 'zod';
 //console.log(process.argv);
-
-import dotenv from 'dotenv';
-dotenv.config({ path: '.env' });
+async function maybeLoadEnv() {
+  if (!process.env.CI) {
+    const { default: dotenv } = await import('dotenv');
+    dotenv.config({ path: '.env' });
+  }
+}
 
 const getNet = () => {
   const gett = process.argv;
@@ -249,6 +252,8 @@ const pushToDirectusProviders = async (p: []) => {
 };
 
 const main = async () => {
+  await maybeLoadEnv();
+
   const epochsFolder = await getLatestEpochsFolder(16);
   const epochNFolder = epochsFolder.map(Number);
   console.log(epoch);
