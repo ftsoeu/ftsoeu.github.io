@@ -1,0 +1,37 @@
+name: Test prebuild only
+
+on:
+  workflow_dispatch: {} # lo lanci a mano dalla UI
+
+jobs:
+  prebuild:
+    runs-on: ubuntu-latest
+    env:
+      DIRECTUS_URL: ${{ secrets.NEXT_PUBLIC_DIRECTUS_URL }}
+      DIRECTUS_TOKEN: ${{ secrets.DIRECTUS_TOKEN }}
+      NODE_ENV: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'yarn'
+
+      - name: Enable Corepack (Yarn Berry)
+        run: corepack enable || true
+
+      - name: Install deps
+        run: |
+          yarn install --frozen-lockfile || yarn install --immutable
+
+      - name: Run prebuild
+        run: |
+          yarn prebuild
+
+      - name: Esegui lo script TS
+        run: |
+          # usa tsx installato nelle devDependencies
+          yarn legacy -- --network=flare
