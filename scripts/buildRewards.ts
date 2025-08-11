@@ -10,6 +10,7 @@ const getArgv = () => {
   let networkName = 'flare';
   let chainID = 14;
   let epochs = ['228'];
+  let providerToPush = false;
 
   for (let arg = 0; arg < process.argv.length; arg++) {
     if (gett[arg].startsWith('--network=')) {
@@ -28,27 +29,34 @@ const getArgv = () => {
 
     if (gett[arg].startsWith('--epochs=')) {
       const eps = gett[arg].replace('--epochs=', '');
-      if (eps.includes(' ')) {
-        console.log('hit');
-        epochs = eps.split(' ');
-      } else {
-        epochs = [eps];
-      }
       if (eps.includes(':')) {
         const range = eps.split(':');
         const min = Number(range[0]);
         const max = Number(range[1]);
-        epochs = [];
+        let tmpEpochs = [];
         for (let eStart = min; eStart <= max; eStart++) {
-          epochs.push(eStart.toString());
+          console.log('hit?', eStart);
+          tmpEpochs.push(eStart.toString());
         }
+        epochs = tmpEpochs;
       }
+      if (eps.includes(' ')) {
+        console.log('hit');
+        epochs = eps.split(' ');
+      } else if (epochs.length < 2) {
+        epochs = [eps];
+      }
+      console.log('ended', epochs);
+    }
+
+    if (gett[arg].startsWith('--providers')) {
+      providerToPush = true;
     }
   }
-  return { networkName, chainID, epochs };
+  return { networkName, chainID, epochs, providerToPush };
 };
 
-const { networkName, chainID, epochs } = getArgv();
+const { networkName, chainID, epochs, providerToPush } = getArgv();
 const periods = { '2_weeks': 4, '4_weeks': 8, '2_months': 16 };
 
 console.log(
@@ -85,7 +93,11 @@ const fetchProviderDetails = async () => {
 
 const fetchClaimableStatus = () => {};
 
-const extractEpochData = async (epoch: number, providersDetails: {}[]) => {
+const extractEpochData = async (
+  epoch: number,
+  providersDetails: {}[],
+  chainID: number
+) => {
   const rewardDistData = JSON.parse(
     await readFile(
       `./tmp/fsp-rewards/${networkName}/${epoch}/reward-distribution-data.json`,
@@ -99,7 +111,7 @@ const extractEpochData = async (epoch: number, providersDetails: {}[]) => {
     )
   );
 
-  const epochResults: any = {};
+  const epochResults: any = [];
 
   for (const claim of rewardDistData.rewardClaims) {
     const beneficiary = claim.body.beneficiary;
@@ -126,6 +138,7 @@ const extractEpochData = async (epoch: number, providersDetails: {}[]) => {
       console.log('Provider wheight formatted:', formatted);
       const rewardRate = Math.round((amount / wNatWeight) * 100 * 1e5) / 1e5;
       console.log('rewardRate:', rewardRate);
+
       const providerInfo: any = providersDetails.find(
         (p: any) => p.address.toLowerCase() === delegationAddress.toLowerCase()
       ) ?? {
@@ -134,20 +147,25 @@ const extractEpochData = async (epoch: number, providersDetails: {}[]) => {
       };
 
       if (!epochResults[delegationAddress]) {
-        epochResults[delegationAddress] = {
-          provider_name: providerInfo.name,
-          logoURI: providerInfo.logoURI,
-          reward_rates: [],
-        };
+        epochResults.push({
+          Epoch: epoch,
+          Provider: providerInfo.id,
+          //provider_name: providerInfo.name,
+          //logoURI: providerInfo.logoURI,
+          Reward: rewardRate,
+          chainId: chainID,
+          VotingPower: wNatWeight,
+        });
       }
 
-      epochResults[delegationAddress].reward_rates.push(rewardRate);
+      //epochResults[delegationAddress].reward_rates.push(rewardRate);
     }
   }
 
   return epochResults;
 };
 
+/*
 const combineEpochsData = async (
   folders: number[],
   providerDetails: any[],
@@ -220,7 +238,7 @@ const combineEpochsData = async (
   }
 
   return results;
-};
+};*/
 
 const pushToDirectusRewards = async (data: {}) => {
   try {
@@ -257,14 +275,68 @@ const pushToDirectusProviders = async (p: []) => {
   }
 };
 
+const getProvidersFromDirectus = async () => {
+  try {
+    const resp = await fetch(`${process.env.DIRECTUS_URL}/items/Providers`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.DIRECTUS_TOKEN}`,
+      },
+    });
+    const body = await resp.json();
+    //console.log(resp.status, body);
+    return body.data;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+// EpochRewards
+const pushToDirectusEpochRewards = async (p: []) => {
+  try {
+    console.log(p);
+    const resp = await fetch(`${process.env.DIRECTUS_URL}/items/EpochRewards`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.DIRECTUS_TOKEN}`,
+      },
+      body: JSON.stringify(p),
+    });
+    const body = await resp.json();
+    console.log(resp.status, body);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 const main = async () => {
   const epochsFolder = await getLatestEpochsFolder('all');
 
+  const providers = await getProvidersFromDirectus();
   const pList = await fetchProviderDetails();
 
-  const d = await extractEpochData(314, pList);
+  if (providerToPush) {
+    pushToDirectusProviders(pList);
+  }
 
-  //console.log(d);
+  //console.log(epochs);
+
+  if (epochs.length == 1) {
+    const d = await extractEpochData(Number(epochs[0]), providers, chainID);
+    const r = await pushToDirectusEpochRewards(d);
+  } else {
+    for (let x = 0; x < epochs.length; x++) {
+      const d = await extractEpochData(Number(epochs[x]), providers, chainID);
+      try {
+        const r = await pushToDirectusEpochRewards(d);
+        console.log('Dati inseriti');
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
 };
 
 main();
