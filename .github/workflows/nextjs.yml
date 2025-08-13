@@ -25,6 +25,48 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  prebuild:
+    runs-on: ubuntu-latest
+    environment: github-pages
+    env:
+      DIRECTUS_URL: ${{ vars.DIRECTUS_URL }}
+      DIRECTUS_TOKEN: ${{ secrets.DIRECTUS_TOKEN }}
+      NODE_ENV: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'yarn'
+
+      - name: Enable Corepack (Yarn Berry)
+        run: corepack enable || true
+
+      - name: Install deps
+        run: |
+          yarn install --frozen-lockfile || yarn install --immutable
+
+      - name: Run prebuild
+        run: |
+          yarn prebuild
+
+      - name: Debug env
+        run: |
+          echo "DIRECTUS_URL is: ${DIRECTUS_URL}"
+          echo "Length: ${#DIRECTUS_URL}"
+          if [ -z "$DIRECTUS_URL" ]; then
+            echo "❌ DIRECTUS_URL is empty"
+            exit 1
+          fi
+
+      - name: Esegui lo script TS
+        run: |
+          # usa tsx installato nelle devDependencies
+          yarn legacy -- --network=flare
+
   # Build job
   build:
     runs-on: ubuntu-latest
