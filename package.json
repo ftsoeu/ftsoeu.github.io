@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": false,
   "scripts": {
-    "dev": "next dev -H 0.0.0.0",
+    "dev": "rimraf ./out && rimraf ./.next && next dev -H 0.0.0.0",
     "renameimage": "tsx scripts/rename-image.ts",
     "prebuild": "rimraf ./tmp && git clone --depth 1 https://github.com/flare-foundation/fsp-rewards.git ./tmp/fsp-rewards",
     "legacy": "tsx scripts/fetch.ts",
