@@ -106,6 +106,12 @@ const columns: ColumnDef<Provider>[] = [
   {
     accessorKey: 'provider_address',
     header: 'Address',
+    cell: ({ row }) => {
+      let addr = row.original.provider_address;
+      let labelAddr =
+        addr.substring(0, 5) + '...' + addr.substring(addr.length - 5);
+      return <>{labelAddr}</>;
+    },
   },
   {
     accessorKey: 'latest_epoch_average',
@@ -204,7 +210,12 @@ export function Providers(props: { providers: Provider[] }) {
             {pinnedProvider.provider_name}
           </TableCell>
           <TableCell>
-            <b>{pinnedProvider.provider_address}</b>
+            <b>
+              {pinnedProvider.provider_address.substring(0, 5)}...
+              {pinnedProvider.provider_address.substring(
+                pinnedProvider.provider_address.length - 5
+              )}
+            </b>
           </TableCell>
           <TableCell>
             <b>{pinnedProvider.latest_epoch_average}</b>
