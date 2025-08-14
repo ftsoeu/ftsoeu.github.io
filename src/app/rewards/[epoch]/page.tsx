@@ -57,6 +57,7 @@ export default async function Page({ params }: any) {
           <div className='col-span-2'>
             <Paginator currentPage={epoch} pages={pList} />
             <Providers providers={providers} />
+            <Paginator currentPage={epoch} pages={pList} />
           </div>
           <div>
             <SidePanel providers={topProviders} />
