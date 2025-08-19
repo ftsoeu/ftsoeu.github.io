@@ -2,6 +2,7 @@
   "name": "ftso-website",
   "version": "0.0.1",
   "private": false,
+  "author": "giorgionetg <gt@giorgiotedesco.it>",
   "scripts": {
     "dev": "rimraf ./out && rimraf ./.next && next dev -H 0.0.0.0",
     "renameimage": "tsx scripts/rename-image.ts",
