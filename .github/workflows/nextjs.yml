@@ -62,10 +62,14 @@ jobs:
             exit 1
           fi
 
-      - name: Esegui lo script TS
+      - name: Esegui lo script TS per Flare
         run: |
           # usa tsx installato nelle devDependencies
           yarn legacy -- --network=flare
+      - name: Esegui lo script TS per Songbird
+        run: |
+          # usa tsx installato nelle devDependencies
+          yarn legacy -- --network=songbird
 
   # Build job
   build:
