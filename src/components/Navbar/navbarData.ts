@@ -1,6 +1,7 @@
 import type { NavigationBar } from '@/lib/types';
 
 import socialData from '../Social/socialData';
+import { useNetworkStore } from '../Providers/NetworkStoreProvider';
 
 const navbarData = () => {
   return [

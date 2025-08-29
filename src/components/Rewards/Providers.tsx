@@ -149,7 +149,10 @@ const columns: ColumnDef<Provider>[] = [
   },
 ];
 
-export function Providers(props: { providers: Provider[] }) {
+export function Providers(props: {
+  providers: Provider[];
+  providerAddress: string;
+}) {
   const b = 32;
   const imgW = b;
   const imgH = b;
@@ -158,7 +161,7 @@ export function Providers(props: { providers: Provider[] }) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const ourProvider = props.providers.filter((d) => {
-    return d.provider_address === '0xb0421af2cffb21d8a0be4087448146e4f9cbd306';
+    return d.provider_address === props.providerAddress.toLowerCase();
   });
 
   const pinnedProvider = ourProvider[0];

@@ -8,6 +8,7 @@ import { headers } from 'next/headers';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
 import Script from 'next/script';
+import { NetworkStoreProvider } from '@/components/Providers/NetworkStoreProvider';
 
 const inter = Roboto({ weight: '400', subsets: ['latin'] });
 
@@ -32,10 +33,12 @@ export default function RootLayout({
       <head></head>
       <body className={inter.className}>
         <div className='absolute w-full h-full'>
-          <NavBar />
-          <MobileList />
-          <TooltipProvider>{children}</TooltipProvider>
-          <Footer />
+          <NetworkStoreProvider>
+            <NavBar />
+            <MobileList />
+            <TooltipProvider>{children}</TooltipProvider>
+            <Footer />
+          </NetworkStoreProvider>
         </div>
       </body>
       <Script nonce={nonce} />

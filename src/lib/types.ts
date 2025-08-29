@@ -28,6 +28,12 @@ export const heroValidadion = z.object({
     .optional(),
 });
 
+export const ChainNetwork = z.object({
+  name: z.string(),
+  chainId: z.number(),
+});
+
 export type NavLink = z.infer<typeof navigationLinkValidation>;
 export type NavigationBar = z.infer<typeof navigationBarValidation>;
 export type Hero = z.infer<typeof heroValidadion>;
+export type Network = z.infer<typeof ChainNetwork>;

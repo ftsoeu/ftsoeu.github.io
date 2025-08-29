@@ -10,6 +10,7 @@ import Logo from '@/components/Icons/Logo';
 import ButtonBar from './ButtonBar';
 import { TypeIcons } from '@/lib/icons';
 import useSubStore from './useSubStore';
+import { useNetworkStore } from '@/components/Providers/NetworkStoreProvider';
 
 function SubMenu(props: { id: string; links: any }) {
   let { subject, isOpen } = useSubStore();
@@ -34,6 +35,8 @@ function SubMenu(props: { id: string; links: any }) {
 
 function DesktopNav(props: { links: NavLink[] }) {
   const { isOpen, subject, handleOpen } = useSubStore();
+
+  const { name, handleSwitch } = useNetworkStore((state) => state);
 
   const onClick = (sub: string) => {
     if (sub != subject) {
@@ -75,6 +78,14 @@ function DesktopNav(props: { links: NavLink[] }) {
             );
           }
         })}
+        <li>
+          <div
+            onClick={() => handleSwitch()}
+            className='p-2 pr-4 flex flex-row rounded-sm  items-center hover:bg-primary hover:text-[#ffffff] hover:dark:text-white'
+          >
+            {name.toUpperCase()}
+          </div>
+        </li>
       </ul>
     </>
   );

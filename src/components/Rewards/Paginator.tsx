@@ -1,7 +1,11 @@
 import Link from 'next/link';
 import { Button } from '../ui/button';
 
-export function Paginator(props: { currentPage: number; pages: number[] }) {
+export function Paginator(props: {
+  network: string;
+  currentPage: number;
+  pages: number[];
+}) {
   let p = props.pages;
   let firstPage = Number(p.slice(0, 1));
   let lastPage = Number(p.slice(p.length - 1, p.length));
@@ -69,7 +73,7 @@ export function Paginator(props: { currentPage: number; pages: number[] }) {
                 <Link
                   className='w-12 button bg-gray-200 text-primary font-bold text-center rounded-sm p-3 m-1'
                   key={e.page}
-                  href={`/rewards/${e.page}`}
+                  href={`/${props.network}/rewards/${e.page}`}
                 >
                   {symbol}
                 </Link>
@@ -99,7 +103,7 @@ export function Paginator(props: { currentPage: number; pages: number[] }) {
               <Link
                 className='button text-primary rounded-sm p-3 m-1'
                 key={b.toString()}
-                href={`/rewards/${b.toString()}`}
+                href={`/${props.network}/rewards/${b.toString()}`}
               >
                 {b.toString()}
               </Link>
