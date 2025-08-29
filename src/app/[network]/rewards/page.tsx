@@ -101,7 +101,7 @@ export default async function Page({ params }: any) {
   );
 }
 
-export async function getStaticPaths() {
+export async function generateStaticParams() {
   const paths = [
     { params: { network: 'flare' } },
     { params: { network: 'songbird' } },

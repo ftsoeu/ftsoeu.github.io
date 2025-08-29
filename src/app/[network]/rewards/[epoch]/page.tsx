@@ -14,7 +14,7 @@ interface PageProps {
   };
 }
 
-export async function generateStaticParams() {
+/*export async function generateStaticParams() {
   const pages = await directus.request(
     readItems('Rewards', {
       fields: ['*'],
@@ -27,7 +27,7 @@ export async function generateStaticParams() {
     epoch: page.epoch.toString(),
     pages: pageList,
   }));
-}
+}*/
 
 export default async function Page({ params }: any) {
   let chainId = params.network == 'flare' ? 14 : 19;
@@ -90,7 +90,7 @@ export default async function Page({ params }: any) {
   );
 }
 
-export async function getStaticPaths() {
+export async function generateStaticParams() {
   /*const paths = [
     { params: { network: 'flare', epoch: 0 } },
     { params: { network: 'songbird', epoch: 0 } },
