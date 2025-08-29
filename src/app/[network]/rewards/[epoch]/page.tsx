@@ -91,18 +91,8 @@ export default async function Page({ params }: any) {
 }
 
 export async function generateStaticParams() {
-  /*const paths = [
-    { params: { network: 'flare', epoch: 0 } },
-    { params: { network: 'songbird', epoch: 0 } },
-  ];*/
-
-  /*const net = [];
-  net[14] = 'flare';
-  net[19] = 'songbird';*/
-
-  const paths: any[] = [];
-
-  let songbirdPList = await directus.request(
+  // Recupero gli epoch da Songbird
+  const songbirdPList = await directus.request(
     readItems('Rewards', {
       fields: ['chainId', 'epoch'],
       sort: ['-epoch'],
@@ -110,7 +100,8 @@ export async function generateStaticParams() {
     })
   );
 
-  let flarePList = await directus.request(
+  // Recupero gli epoch da Flare
+  const flarePList = await directus.request(
     readItems('Rewards', {
       fields: ['chainId', 'epoch'],
       sort: ['-epoch'],
@@ -118,5 +109,16 @@ export async function generateStaticParams() {
     })
   );
 
-  return { paths, fallback: false };
+  // Converto i risultati nei parametri richiesti da App Router
+  const songbirdParams = songbirdPList.map((item) => ({
+    network: 'songbird',
+    epoch: String(item.epoch),
+  }));
+
+  const flareParams = flarePList.map((item) => ({
+    network: 'flare',
+    epoch: String(item.epoch),
+  }));
+
+  return [...songbirdParams, ...flareParams];
 }
