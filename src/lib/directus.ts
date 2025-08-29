@@ -51,6 +51,7 @@ export type Output = {
 };
 
 export type Rewards = {
+  chainId: number;
   epoch: number;
   output: Output;
 };
